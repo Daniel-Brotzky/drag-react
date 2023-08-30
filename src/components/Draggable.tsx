@@ -5,7 +5,8 @@ interface IDraggable {
   style?: Object,
   className?: string,
   onDragStart?: (o: DOMRect) => void,
-  onDragEnd?: (o: DOMRect) => void
+  onDragEnd?: (o: DOMRect) => void,
+  axix?: string
 }
 
 function Draggable({ children, style, className, onDragStart, onDragEnd }: IDraggable) {
@@ -63,8 +64,15 @@ function Draggable({ children, style, className, onDragStart, onDragEnd }: IDrag
       const x: number = isTouch ? e.touches[0].clientX : e.clientX;
       const y: number = isTouch ? e.touches[0].clientY : e.clientY;
 
-      dragRef.current.style.left = (x + offset[0]) + 'px';
-      dragRef.current.style.top = (y + offset[1]) + 'px';
+      if (axis && axis === 'x') {
+        dragRef.current.style.left = (x + offset[0]) + 'px';
+      } else if (axis && axis === 'y') {
+        dragRef.current.style.top = (y + offset[1]) + 'px';
+      } else {
+        dragRef.current.style.left = (x + offset[0]) + 'px';
+        dragRef.current.style.top = (y + offset[1]) + 'px';
+      }  
+
     }
   }, []);
 
