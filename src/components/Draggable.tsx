@@ -6,10 +6,12 @@ interface IDraggable {
   className?: string,
   onDragStart?: (o: DOMRect) => void,
   onDragEnd?: (o: DOMRect) => void,
-  axix?: string
+  axis?: string,
+  clampX?: number[],
+  clampY?: number[]
 }
 
-function Draggable({ children, style, className, onDragStart, onDragEnd }: IDraggable) {
+function Draggable({ children, style, className, onDragStart, onDragEnd, axis, clampX, clampY }: IDraggable) {
   const dragRef = useRef<HTMLDivElement>(null);
   let isMouseDown: boolean = false;
   let offset: Array<number> = [0, 0];
@@ -59,15 +61,26 @@ function Draggable({ children, style, className, onDragStart, onDragEnd }: IDrag
     if (!isTouch) {
       e.preventDefault();
     }
+    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
     if (isMouseDown && dragRef.current) {
       const x: number = isTouch ? e.touches[0].clientX : e.clientX;
       const y: number = isTouch ? e.touches[0].clientY : e.clientY;
 
+      
+
       if (axis && axis === 'x') {
-        dragRef.current.style.left = (x + offset[0]) + 'px';
+        if (clampX) {
+          dragRef.current.style.left = clamp((x + offset[0]), clampX[0], clampX[1]) + 'px';
+        } else { 
+          dragRef.current.style.left = (x + offset[0]) + 'px';
+        }  
       } else if (axis && axis === 'y') {
-        dragRef.current.style.top = (y + offset[1]) + 'px';
+        if (clampY) {
+          dragRef.current.style.top = clamp((y + offset[1]), clampY[0], clampY[1]) + 'px';
+        } else {  
+          dragRef.current.style.top = (y + offset[1]) + 'px';
+        }
       } else {
         dragRef.current.style.left = (x + offset[0]) + 'px';
         dragRef.current.style.top = (y + offset[1]) + 'px';
