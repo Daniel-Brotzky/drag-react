@@ -61,7 +61,7 @@ function Draggable({ children, style, className, onDragStart, onDragEnd, axis, c
     if (!isTouch) {
       e.preventDefault();
     }
-    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+    const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
 
     if (isMouseDown && dragRef.current) {
       const x: number = isTouch ? e.touches[0].clientX : e.clientX;
